@@ -1,4 +1,6 @@
 HELP.md
+# Local workstation selection (admin UI); keep out of VCS or use your own copy
+workstation-machine.json
 target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/

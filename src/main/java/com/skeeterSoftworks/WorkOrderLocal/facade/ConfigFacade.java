@@ -2,25 +2,32 @@ package com.skeeterSoftworks.WorkOrderLocal.facade;
 
 
 import com.skeeterSoftworks.WorkOrderLocal.service.ConfigService;
+import com.skeeterSoftworks.WorkOrderLocal.service.WorkstationMachineConfigService;
 import com.skeeterSoftworks.WorkOrderLocal.to.objects.StationConfigTO;
+import com.skeeterSoftworks.WorkOrderLocal.to.objects.WorkstationMachineConfigTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
 
 @Slf4j
 @RestController
 @RequestMapping("/config")
+@CrossOrigin(origins = "*")
 public class ConfigFacade {
 
-    @Value("${machine.name:machineHead}")
-    private String machineName;
+    @Autowired
+    private ConfigService configService;
 
     @Autowired
-    ConfigService configService;
+    private WorkstationMachineConfigService workstationMachineConfigService;
 
     @GetMapping("/station-config")
     public ResponseEntity<?> getStationConfig() {
@@ -29,7 +36,7 @@ public class ConfigFacade {
 
         try {
             StationConfigTO stationConfigTO = new StationConfigTO();
-            stationConfigTO.setMachineName(machineName);
+            stationConfigTO.setMachineName(workstationMachineConfigService.readMachineName().orElse(null));
             stationConfigTO.setWoPreconditionsJSON(configService.getWorkOrderPreconditions());
             return ResponseEntity.ok(stationConfigTO);
 
@@ -39,4 +46,26 @@ public class ConfigFacade {
         }
     }
 
+    @GetMapping("/workstation-machine")
+    public ResponseEntity<WorkstationMachineConfigTO> getWorkstationMachine() {
+        log.debug("Facade call: getWorkstationMachine()");
+        WorkstationMachineConfigTO to = new WorkstationMachineConfigTO();
+        to.setMachineName(workstationMachineConfigService.readMachineName().orElse(null));
+        return ResponseEntity.ok(to);
+    }
+
+    @PostMapping("/workstation-machine")
+    public ResponseEntity<?> saveWorkstationMachine(@RequestBody WorkstationMachineConfigTO body) {
+        log.debug("Facade call: saveWorkstationMachine()");
+        if (body == null || body.getMachineName() == null || body.getMachineName().isBlank()) {
+            return ResponseEntity.badRequest().body("MACHINE_NAME_REQUIRED");
+        }
+        try {
+            workstationMachineConfigService.saveMachineName(body.getMachineName());
+            return ResponseEntity.ok(body);
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            return ResponseEntity.internalServerError().body("FAILED_TO_SAVE_WORKSTATION_MACHINE_CONFIG");
+        }
+    }
 }
