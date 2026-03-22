@@ -1,5 +1,6 @@
 package com.skeeterSoftworks.WorkOrderLocal.service;
 
+import com.skeeterSoftworks.WorkOrderLocal.to.objects.WorkstationMachineConfigTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,11 @@ public class WorkstationMachineConfigService {
     private static final Pattern MACHINE_NAME_PATTERN = Pattern.compile(
             "\"machineName\"\\s*:\\s*\"([^\"]*)\"",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL
+    );
+
+    private static final Pattern MACHINE_ID_PATTERN = Pattern.compile(
+            "\"machineId\"\\s*:\\s*(\\d+)",
+            Pattern.CASE_INSENSITIVE
     );
 
     @Value("${workstation.machine.config.file:./workstation-machine.json}")
@@ -46,18 +52,49 @@ public class WorkstationMachineConfigService {
         }
     }
 
-    public void saveMachineName(String machineName) throws IOException {
+    public Optional<Long> readMachineId() {
+        Path path = Path.of(configFilePath);
+        if (!Files.isRegularFile(path)) {
+            return Optional.empty();
+        }
+        try {
+            String content = Files.readString(path, StandardCharsets.UTF_8);
+            Matcher m = MACHINE_ID_PATTERN.matcher(content);
+            if (!m.find()) {
+                return Optional.empty();
+            }
+            return Optional.of(Long.parseLong(m.group(1)));
+        } catch (IOException | NumberFormatException e) {
+            log.error("Failed to read machineId from {}: {}", configFilePath, e.getMessage());
+            return Optional.empty();
+        }
+    }
+
+    public void save(WorkstationMachineConfigTO to) throws IOException {
         Path path = Path.of(configFilePath);
         Path parent = path.getParent();
         if (parent != null && !Files.isDirectory(parent)) {
             Files.createDirectories(parent);
         }
-        String value = machineName == null ? "" : machineName.trim();
+        String value = to.getMachineName() == null ? "" : to.getMachineName().trim();
         String escaped = value
                 .replace("\\", "\\\\")
                 .replace("\"", "\\\"");
-        String json = "{\n  \"machineName\" : \"" + escaped + "\"\n}";
-        Files.writeString(path, json, StandardCharsets.UTF_8);
-        log.info("Saved workstation machine name to {}", path.toAbsolutePath());
+        StringBuilder json = new StringBuilder();
+        json.append("{\n  \"machineName\" : \"").append(escaped).append("\"");
+        if (to.getMachineId() != null && to.getMachineId() > 0) {
+            json.append(",\n  \"machineId\" : ").append(to.getMachineId());
+        }
+        json.append("\n}");
+        Files.writeString(path, json.toString(), StandardCharsets.UTF_8);
+        log.info("Saved workstation machine config to {}", path.toAbsolutePath());
+    }
+
+    /** @deprecated use {@link #save(WorkstationMachineConfigTO)} */
+    @Deprecated
+    public void saveMachineName(String machineName) throws IOException {
+        WorkstationMachineConfigTO to = new WorkstationMachineConfigTO();
+        to.setMachineName(machineName);
+        save(to);
     }
 }

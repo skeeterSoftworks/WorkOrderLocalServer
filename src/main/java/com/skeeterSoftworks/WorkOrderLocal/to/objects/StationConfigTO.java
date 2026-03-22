@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 public class StationConfigTO {
 
-
     private String machineName;
+    private Long machineId;
     private String woPreconditionsJSON;
 }

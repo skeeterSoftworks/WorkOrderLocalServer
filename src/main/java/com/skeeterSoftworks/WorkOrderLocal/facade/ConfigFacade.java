@@ -37,6 +37,7 @@ public class ConfigFacade {
         try {
             StationConfigTO stationConfigTO = new StationConfigTO();
             stationConfigTO.setMachineName(workstationMachineConfigService.readMachineName().orElse(null));
+            stationConfigTO.setMachineId(workstationMachineConfigService.readMachineId().orElse(null));
             stationConfigTO.setWoPreconditionsJSON(configService.getWorkOrderPreconditions());
             return ResponseEntity.ok(stationConfigTO);
 
@@ -51,6 +52,7 @@ public class ConfigFacade {
         log.debug("Facade call: getWorkstationMachine()");
         WorkstationMachineConfigTO to = new WorkstationMachineConfigTO();
         to.setMachineName(workstationMachineConfigService.readMachineName().orElse(null));
+        to.setMachineId(workstationMachineConfigService.readMachineId().orElse(null));
         return ResponseEntity.ok(to);
     }
 
@@ -61,7 +63,7 @@ public class ConfigFacade {
             return ResponseEntity.badRequest().body("MACHINE_NAME_REQUIRED");
         }
         try {
-            workstationMachineConfigService.saveMachineName(body.getMachineName());
+            workstationMachineConfigService.save(body);
             return ResponseEntity.ok(body);
         } catch (IOException e) {
             log.error(e.getMessage(), e);

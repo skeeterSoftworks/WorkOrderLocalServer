@@ -6,7 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * Persisted as {@code {"machineName": "..."}} in the workstation JSON config file.
+ * Persisted in {@code workstation-machine.json}, e.g.
+ * {@code {"machineName":"Line 1","machineId":3}}.
  */
 @Data
 @AllArgsConstructor
@@ -16,4 +17,7 @@ public class WorkstationMachineConfigTO {
 
     /** Selected machine name from central; null or blank means not configured. */
     private String machineName;
+
+    /** Optional stable id from central; used for work-order lookup. */
+    private Long machineId;
 }

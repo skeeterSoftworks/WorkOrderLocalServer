@@ -12,6 +12,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -42,5 +43,17 @@ public class CentralMachinesService {
             log.error(e.getMessage(), e);
             throw e;
         }
+    }
+
+    public Optional<Long> findMachineIdByMachineName(String name) {
+        if (name == null || name.isBlank()) {
+            return Optional.empty();
+        }
+        String target = name.trim();
+        return fetchAllMachines().stream()
+                .filter(m -> m.getMachineName() != null && target.equalsIgnoreCase(m.getMachineName().trim()))
+                .map(CentralMachineTO::getId)
+                .filter(id -> id != null && id > 0)
+                .findFirst();
     }
 }
