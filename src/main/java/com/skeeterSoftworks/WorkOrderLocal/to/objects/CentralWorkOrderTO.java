@@ -23,6 +23,8 @@ public class CentralWorkOrderTO {
     private Long purchaseOrderId;
     private String productName;
     private String productReference;
+    private Integer requiredQuantity;
+    private Long producedGoodQuantity;
     private LocalDate dueDate;
     private LocalDate startDate;
     private LocalDate endDate;
