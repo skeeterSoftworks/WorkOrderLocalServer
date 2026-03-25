@@ -25,6 +25,8 @@ public class CentralWorkOrderTO {
     private String productReference;
     private Integer requiredQuantity;
     private Long producedGoodQuantity;
+    /** {@code INCOMPLETE} or {@code COMPLETE} from central. */
+    private String state;
     private LocalDate dueDate;
     private LocalDate startDate;
     private LocalDate endDate;

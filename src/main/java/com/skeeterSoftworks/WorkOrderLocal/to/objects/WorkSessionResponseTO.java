@@ -23,4 +23,5 @@ public class WorkSessionResponseTO {
     private String operatorName;
     private String operatorSurname;
     private String stationId;
+    private boolean workOrderCompletedByTarget;
 }
