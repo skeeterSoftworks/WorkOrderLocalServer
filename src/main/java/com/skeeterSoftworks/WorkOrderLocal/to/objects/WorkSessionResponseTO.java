@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -24,4 +25,6 @@ public class WorkSessionResponseTO {
     private String operatorSurname;
     private String stationId;
     private boolean workOrderCompletedByTarget;
+
+    private List<MeasuringFeaturePrototypeTO> measuringFeaturePrototypes;
 }
