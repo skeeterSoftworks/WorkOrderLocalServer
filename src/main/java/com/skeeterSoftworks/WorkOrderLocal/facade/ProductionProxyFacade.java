@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,6 +49,19 @@ public class ProductionProxyFacade {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return ResponseEntity.status(502).body("CENTRAL_WORK_ORDERS_UNAVAILABLE");
+        }
+    }
+
+    @GetMapping("/work-orders/{workOrderId}/quality-info-steps")
+    public ResponseEntity<?> getQualityInfoSteps(@PathVariable Long workOrderId) {
+        if (workOrderId == null || workOrderId <= 0) {
+            return ResponseEntity.badRequest().body("INVALID_WORK_ORDER_ID");
+        }
+        try {
+            return ResponseEntity.ok(centralWorkOrdersProxyService.fetchQualityInfoStepsForWorkOrder(workOrderId));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return ResponseEntity.status(502).body("CENTRAL_QUALITY_INFO_STEPS_UNAVAILABLE");
         }
     }
 }

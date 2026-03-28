@@ -1,8 +1,8 @@
 package com.skeeterSoftworks.WorkOrderLocal.service;
 
 import com.skeeterSoftworks.WorkOrderLocal.to.objects.CentralMachineTO;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
@@ -18,14 +18,13 @@ import java.util.Optional;
 @Service
 public class CentralMachinesService {
 
-    private WebClient webClient;
+    private final WebClient webClient;
 
     @Value("${central.url}")
     private String centralUrl;
 
-    @PostConstruct
-    private void init() {
-        webClient = WebClient.create();
+    public CentralMachinesService(@Qualifier("centralWebClient") WebClient webClient) {
+        this.webClient = webClient;
     }
 
     public List<CentralMachineTO> fetchAllMachines() {

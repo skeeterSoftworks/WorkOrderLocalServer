@@ -1,7 +1,7 @@
 package com.skeeterSoftworks.WorkOrderLocal.service;
 
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
@@ -13,14 +13,13 @@ import reactor.core.publisher.Mono;
 @Component
 public class ConfigService {
 
-    private WebClient webClient;
+    private final WebClient webClient;
 
     @Value("${central.url}")
     private String centralUrl;
 
-    @PostConstruct
-    private void init() {
-        webClient = WebClient.create();
+    public ConfigService(@Qualifier("centralWebClient") WebClient webClient) {
+        this.webClient = webClient;
     }
 
 

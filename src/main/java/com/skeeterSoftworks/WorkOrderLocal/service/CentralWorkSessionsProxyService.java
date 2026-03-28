@@ -1,8 +1,8 @@
 package com.skeeterSoftworks.WorkOrderLocal.service;
 
 import com.skeeterSoftworks.WorkOrderLocal.to.objects.*;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -11,14 +11,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 public class CentralWorkSessionsProxyService {
 
-    private WebClient webClient;
+    private final WebClient webClient;
 
     @Value("${central.url}")
     private String centralUrl;
 
-    @PostConstruct
-    private void init() {
-        webClient = WebClient.create();
+    public CentralWorkSessionsProxyService(@Qualifier("centralWebClient") WebClient webClient) {
+        this.webClient = webClient;
     }
 
     public WorkSessionResponseTO openSession(WorkSessionOpenRequestTO body) {

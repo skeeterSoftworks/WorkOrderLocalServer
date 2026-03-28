@@ -2,8 +2,8 @@ package com.skeeterSoftworks.WorkOrderLocal.service;
 
 
 import com.skeeterSoftworks.WorkOrderLocal.to.objects.UserTO;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -13,15 +13,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 public class UsersService {
 
-	private WebClient webClient;
-
-	@PostConstruct
-	private void init() {
-		webClient = WebClient.create();
-	}
+	private final WebClient webClient;
 
 	@Value("${central.url}")
 	private String centralUrl;
+
+	public UsersService(@Qualifier("centralWebClient") WebClient webClient) {
+		this.webClient = webClient;
+	}
 
 	public UserTO getUserByQrCode(String qrCode) {
 
