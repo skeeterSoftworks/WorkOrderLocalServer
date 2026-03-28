@@ -27,4 +27,7 @@ public class WorkSessionResponseTO {
     private boolean workOrderCompletedByTarget;
 
     private List<MeasuringFeaturePrototypeTO> measuringFeaturePrototypes;
+
+    /** Raw Base64 of the product technical drawing (when present). */
+    private String technicalDrawingBase64;
 }
