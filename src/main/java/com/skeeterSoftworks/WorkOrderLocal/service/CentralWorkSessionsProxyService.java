@@ -68,6 +68,14 @@ public class CentralWorkSessionsProxyService {
                 .block();
     }
 
+    public WorkSessionResponseTO addSetupProduct(long id) {
+        return webClient.post()
+                .uri(centralUrl + "/work-sessions/{id}/setup-products", id)
+                .retrieve()
+                .bodyToMono(WorkSessionResponseTO.class)
+                .block();
+    }
+
     public WorkSessionResponseTO getById(long id) {
         return webClient.get()
                 .uri(centralUrl + "/work-sessions/{id}", id)

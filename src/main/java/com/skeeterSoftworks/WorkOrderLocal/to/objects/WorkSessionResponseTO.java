@@ -19,6 +19,9 @@ public class WorkSessionResponseTO {
     private LocalDateTime sessionStart;
     private LocalDateTime sessionEnd;
     private long productCount;
+    private long controlProductCount;
+    private long faultyProductCount;
+    private long setupProductCount;
     private String productReferenceID;
     private String operatorQrCode;
     private String operatorName;

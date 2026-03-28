@@ -97,6 +97,18 @@ public class ProductionWorkSessionFacade {
         }
     }
 
+    @PostMapping("/{id}/setup-products")
+    public ResponseEntity<?> setupProducts(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(centralWorkSessionsProxyService.addSetupProduct(id));
+        } catch (WebClientResponseException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsString());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return ResponseEntity.status(502).body("CENTRAL_WORK_SESSION_UNAVAILABLE");
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
         try {
