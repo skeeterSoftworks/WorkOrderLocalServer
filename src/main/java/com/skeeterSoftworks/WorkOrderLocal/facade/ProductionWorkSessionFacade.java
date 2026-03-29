@@ -2,7 +2,12 @@ package com.skeeterSoftworks.WorkOrderLocal.facade;
 
 import com.skeeterSoftworks.WorkOrderLocal.service.CentralWorkSessionsProxyService;
 import com.skeeterSoftworks.WorkOrderLocal.service.WorkSessionGoodCountBufferService;
-import com.skeeterSoftworks.WorkOrderLocal.to.objects.*;
+import com.skeeterSoftworks.WorkOrderLocal.to.objects.ControlProductCreateRequestTO;
+import com.skeeterSoftworks.WorkOrderLocal.to.objects.FaultyProductCreateRequestTO;
+import com.skeeterSoftworks.WorkOrderLocal.to.objects.ProductCountDeltaRequestTO;
+import com.skeeterSoftworks.WorkOrderLocal.to.objects.WorkSessionOpenRequestTO;
+import com.skeeterSoftworks.WorkOrderLocal.to.objects.WorkSessionResponseTO;
+import com.skeeterSoftworks.WorkOrderLocal.to.objects.WorkSessionSetupProductCreateTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -98,9 +103,11 @@ public class ProductionWorkSessionFacade {
     }
 
     @PostMapping("/{id}/setup-products")
-    public ResponseEntity<?> setupProducts(@PathVariable Long id) {
+    public ResponseEntity<?> setupProducts(
+            @PathVariable Long id,
+            @RequestBody(required = false) WorkSessionSetupProductCreateTO body) {
         try {
-            return ResponseEntity.ok(centralWorkSessionsProxyService.addSetupProduct(id));
+            return ResponseEntity.ok(centralWorkSessionsProxyService.addSetupProduct(id, body));
         } catch (WebClientResponseException e) {
             return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsString());
         } catch (Exception e) {

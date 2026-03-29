@@ -22,6 +22,7 @@ public class WorkSessionResponseTO {
     private long controlProductCount;
     private long faultyProductCount;
     private long setupProductCount;
+    private List<SetupProductTO> setupProducts;
     private String productReferenceID;
     private String operatorQrCode;
     private String operatorName;

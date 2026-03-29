@@ -18,5 +18,6 @@ public class ProductTO {
     private String name;
     private String reference;
     private String description;
+    private SetupDataPrototypeTO setupDataPrototype;
     private List<QualityInfoStepTO> qualityInfoSteps;
 }

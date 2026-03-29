@@ -68,12 +68,17 @@ public class CentralWorkSessionsProxyService {
                 .block();
     }
 
-    public WorkSessionResponseTO addSetupProduct(long id) {
-        return webClient.post()
-                .uri(centralUrl + "/work-sessions/{id}/setup-products", id)
-                .retrieve()
-                .bodyToMono(WorkSessionResponseTO.class)
-                .block();
+    public WorkSessionResponseTO addSetupProduct(long id, WorkSessionSetupProductCreateTO body) {
+        var spec = webClient.post().uri(centralUrl + "/work-sessions/{id}/setup-products", id);
+        if (body != null) {
+            return spec
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(body)
+                    .retrieve()
+                    .bodyToMono(WorkSessionResponseTO.class)
+                    .block();
+        }
+        return spec.retrieve().bodyToMono(WorkSessionResponseTO.class).block();
     }
 
     public WorkSessionResponseTO getById(long id) {
