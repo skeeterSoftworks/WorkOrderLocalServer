@@ -1,8 +1,10 @@
 package com.skeeterSoftworks.WorkOrderLocal.facade;
 
 
+import com.skeeterSoftworks.WorkOrderLocal.service.CentralSelectOptionsProxyService;
 import com.skeeterSoftworks.WorkOrderLocal.service.ConfigService;
 import com.skeeterSoftworks.WorkOrderLocal.service.WorkstationMachineConfigService;
+import com.skeeterSoftworks.WorkOrderLocal.to.objects.SelectOptionsTO;
 import com.skeeterSoftworks.WorkOrderLocal.to.objects.StationConfigTO;
 import com.skeeterSoftworks.WorkOrderLocal.to.objects.WorkstationMachineConfigTO;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,9 @@ public class ConfigFacade {
 
     @Autowired
     private WorkstationMachineConfigService workstationMachineConfigService;
+
+    @Autowired
+    private CentralSelectOptionsProxyService centralSelectOptionsProxyService;
 
     @GetMapping("/station-config")
     public ResponseEntity<?> getStationConfig() {
@@ -68,6 +73,17 @@ public class ConfigFacade {
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             return ResponseEntity.internalServerError().body("FAILED_TO_SAVE_WORKSTATION_MACHINE_CONFIG");
+        }
+    }
+
+    @GetMapping("/select-options")
+    public ResponseEntity<SelectOptionsTO> getSelectOptions() {
+        log.debug("Facade call: getSelectOptions() (proxied to central)");
+        try {
+            return ResponseEntity.ok(centralSelectOptionsProxyService.fetchSelectOptions());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return ResponseEntity.internalServerError().build();
         }
     }
 }
