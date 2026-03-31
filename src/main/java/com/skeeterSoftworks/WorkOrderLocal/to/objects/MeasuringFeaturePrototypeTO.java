@@ -20,7 +20,6 @@ public class MeasuringFeaturePrototypeTO {
     private String classType;
     private String frequency;
     private String checkType;
-    private String toolType;
     private String measuringTool;
 }
 
