@@ -18,4 +18,6 @@ public class CentralMachineTO {
 
     private Long id;
     private String machineName;
+    /** Base64 payload from central {@code MachineTO}; large on list responses. */
+    private String machineImageBase64;
 }

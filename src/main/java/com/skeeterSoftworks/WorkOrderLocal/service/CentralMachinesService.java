@@ -27,6 +27,21 @@ public class CentralMachinesService {
         this.webClient = webClient;
     }
 
+    public Optional<CentralMachineTO> fetchMachineById(long id) {
+        try {
+            CentralMachineTO m = webClient.get()
+                    .uri(centralUrl + "/machines/{id}", id)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .bodyToMono(CentralMachineTO.class)
+                    .block();
+            return Optional.ofNullable(m);
+        } catch (Exception e) {
+            log.warn("Central machine fetch by id {} failed: {}", id, e.getMessage());
+            return Optional.empty();
+        }
+    }
+
     public List<CentralMachineTO> fetchAllMachines() {
         try {
             Mono<List<CentralMachineTO>> response = webClient.get()

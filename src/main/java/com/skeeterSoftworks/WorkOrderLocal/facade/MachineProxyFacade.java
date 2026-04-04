@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +24,19 @@ public class MachineProxyFacade {
         log.debug("Facade call: proxy GET /machines/all -> central");
         try {
             return ResponseEntity.ok(centralMachinesService.fetchAllMachines());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return ResponseEntity.status(502).body("CENTRAL_MACHINES_UNAVAILABLE");
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getByIdFromCentral(@PathVariable Long id) {
+        log.debug("Facade call: proxy GET /machines/{} -> central", id);
+        try {
+            return centralMachinesService.fetchMachineById(id)
+                    .map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return ResponseEntity.status(502).body("CENTRAL_MACHINES_UNAVAILABLE");
