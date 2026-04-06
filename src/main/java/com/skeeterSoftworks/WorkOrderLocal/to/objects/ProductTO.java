@@ -20,4 +20,5 @@ public class ProductTO {
     private String description;
     private SetupDataPrototypeTO setupDataPrototype;
     private List<QualityInfoStepTO> qualityInfoSteps;
+    private TechnologyTO technologyData;
 }
