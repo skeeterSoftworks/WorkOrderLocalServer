@@ -4,11 +4,13 @@ package com.skeeterSoftworks.WorkOrderLocal.facade;
 import com.skeeterSoftworks.WorkOrderLocal.service.CentralSelectOptionsProxyService;
 import com.skeeterSoftworks.WorkOrderLocal.service.ConfigService;
 import com.skeeterSoftworks.WorkOrderLocal.service.WorkstationMachineConfigService;
+import com.skeeterSoftworks.WorkOrderLocal.to.objects.ProductionWorkSessionConfigTO;
 import com.skeeterSoftworks.WorkOrderLocal.to.objects.SelectOptionsTO;
 import com.skeeterSoftworks.WorkOrderLocal.to.objects.StationConfigTO;
 import com.skeeterSoftworks.WorkOrderLocal.to.objects.WorkstationMachineConfigTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +35,9 @@ public class ConfigFacade {
 
     @Autowired
     private CentralSelectOptionsProxyService centralSelectOptionsProxyService;
+
+    @Value("${production.work-session.control-dialog-interval-minutes:0}")
+    private Integer controlDialogIntervalMinutes;
 
     @GetMapping("/station-config")
     public ResponseEntity<?> getStationConfig() {
@@ -85,5 +90,11 @@ public class ConfigFacade {
             log.error(e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @GetMapping("/production-work-session")
+    public ResponseEntity<ProductionWorkSessionConfigTO> getProductionWorkSessionConfig() {
+        Integer minutes = controlDialogIntervalMinutes == null ? 0 : Math.max(0, controlDialogIntervalMinutes);
+        return ResponseEntity.ok(new ProductionWorkSessionConfigTO(minutes));
     }
 }
