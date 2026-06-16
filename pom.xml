@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.skeeterSoftworks</groupId>
 	<artifactId>WorkOrderLocal</artifactId>
-	<version>0.0.6-SNAPSHOT</version>
+	<version>0.0.7</version>
 	<name>WorkOrderLocal</name>
 	<description>Work Order Local Server</description>
 	<url/>
@@ -129,6 +129,29 @@
 						</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.akathist.maven.plugins.launch4j</groupId>
+				<artifactId>launch4j-maven-plugin</artifactId>
+				<version>2.5.2</version>
+				<executions>
+					<execution>
+						<id>build-exe</id>
+						<phase>package</phase>
+						<goals>
+							<goal>launch4j</goal>
+						</goals>
+						<configuration>
+							<headerType>console</headerType>
+							<outfile>${project.build.directory}/${project.artifactId}-${project.version}.exe</outfile>
+							<jar>${project.build.directory}/${project.build.finalName}.jar</jar>
+							<dontWrapJar>false</dontWrapJar>
+							<jre>
+								<minVersion>${java.version}</minVersion>
+							</jre>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
