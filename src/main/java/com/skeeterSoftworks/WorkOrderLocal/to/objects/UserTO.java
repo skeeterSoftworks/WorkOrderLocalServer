@@ -4,6 +4,8 @@ import com.skeeterSoftworks.WorkOrderLocal.to.enums.ERole;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +16,7 @@ public class UserTO {
 
 	private String name;
 	private String surname;
-	private ERole role;
+	private List<ERole> roles = new ArrayList<>();
 	private String qrCode;
 	private long id;
 
