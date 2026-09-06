@@ -19,8 +19,10 @@ import java.time.LocalDate;
 public class CentralWorkOrderTO {
 
     private Long id;
+    private String code;
     private Long productOrderId;
     private Long purchaseOrderId;
+    private String purchaseOrderCode;
     private String productName;
     private String productReference;
     private Integer requiredQuantity;
